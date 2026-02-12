@@ -1,15 +1,15 @@
-name: Easy Fullstack Deploy # Line 1: Must start with the "name" key
+name: Easy Fullstack Deploy
 
 on:
   push:
-    branches: [ "main" ] # Triggers only on pushes to main
+    branches: [ "main" ]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest # Robot uses a Linux runner
+    runs-on: ubuntu-latest
     steps:
       - name: 1. Checkout code
-        uses: actions/checkout@v4 # Get your project files
+        uses: actions/checkout@v4
 
       - name: 2. Setup .NET
         uses: actions/setup-dotnet@v4
@@ -17,7 +17,9 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: 3. Build Backend
-        run: dotnet build --configuration Release # Compiles your .NET API
+        # UPDATED: Tell .NET where the API folder is
+        working-directory: ./WeatherAPI
+        run: dotnet build --configuration Release
 
       - name: 4. Setup Node.js
         uses: actions/setup-node@v4
@@ -25,6 +27,8 @@ jobs:
           node-version: '20'
 
       - name: 5. Build Frontend
+        # UPDATED: Tell npm where the React folder is
+        working-directory: ./WeatherClient
         run: |
           npm install
-          npm run build # Compiles your React app
+          npm run build
