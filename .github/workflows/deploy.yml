@@ -1,1 +1,30 @@
-Easy Fullstack Deploy
+name: Easy Fullstack Deploy # Line 1: Must start with the "name" key
+
+on:
+  push:
+    branches: [ "main" ] # Triggers only on pushes to main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Robot uses a Linux runner
+    steps:
+      - name: 1. Checkout code
+        uses: actions/checkout@v4 # Get your project files
+
+      - name: 2. Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 3. Build Backend
+        run: dotnet build --configuration Release # Compiles your .NET API
+
+      - name: 4. Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 5. Build Frontend
+        run: |
+          npm install
+          npm run build # Compiles your React app
